@@ -8,7 +8,6 @@ Date: 2014-10-21
 """
 
 import argparse
-import re
 
 
 cmakelists_tpl = """CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
@@ -60,8 +59,7 @@ int main() {{
 """
 
 
-header_tpl = """
-#if defined HL
+header_tpl = """#if defined HL
     #include <{filename}_hl.hpp>
 #elif defined PJ
     #include <{filename}_pj.hpp>
@@ -98,8 +96,7 @@ def params(options):
     __params['filename'] = ''
 
     # "Two Sum" => "tow_sum"
-    pattern = re.compile('([A-Z])')
-    __params['filename'] = pattern.sub(r'_\1', args.question.replace(' ', '')).lower()
+    __params['filename'] = args.question.replace(' ', '_').lower()
     if __params['filename'].startswith('_'):
         __params['filename'] = __params['filename'][1:]
     __params['project'] = 'LEETCODE_' + __params['filename'].upper()
