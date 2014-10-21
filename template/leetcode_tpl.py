@@ -109,4 +109,4 @@ def tpls():
 
 
 def outs():
-    return ['CMakeLists', 'main.cpp', __params['filename'] + '.h']
+    return ['CMakeLists.txt', 'main.cpp', __params['filename'] + '.h']
