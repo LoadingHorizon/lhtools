@@ -20,8 +20,11 @@ command_example = """
 command example:
     tplmake.py -t cmakelists -h
     tplmake.py -t cppclass -h
+    tplmake.py -t leetcode -h
+
     tplmake.py -t cmakelists -t exe -p PROJECT -e executable
     tplmake.py -t cppclass -c AB -n aa.bb
+    tplmake.py -t leetcode -q "Two Sum"
 """
 
 
