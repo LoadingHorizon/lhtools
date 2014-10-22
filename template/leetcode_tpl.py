@@ -37,7 +37,8 @@ ADD_EXECUTABLE({filename} ${{SRC_LIST}})
 """
 
 
-main_tpl = """#include <{filename}.h>
+main_tpl = """#include "{filename}.h"
+
 class TestSolution {{
 public:
     static void test() {{
@@ -60,9 +61,9 @@ int main() {{
 
 
 header_tpl = """#if defined HL
-    #include <{filename}_hl.hpp>
+    #include "{filename}_hl.hpp"
 #elif defined PJ
-    #include <{filename}_pj.hpp>
+    #include "{filename}_pj.hpp"
 #endif
 """
 
