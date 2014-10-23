@@ -18,7 +18,7 @@ header_tpl = """// @file {file}.h
 // @vers {version}
 // @date {date}
 
-#param once
+#pragma once
 
 {namespace_start}
 
