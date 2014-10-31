@@ -10,11 +10,11 @@ tplmake.py可以拓展自己的template，`{tpl_name}_tpl.py` 必须实现如下
 目前支持的模板有:
 * `cmakelists_tpl.py`，cmake模板
 * `cppclass_tpl.py`，c++类模板
-* `leetcode_tpl.py`，leetcode c++模板
+* `leetcpp_tpl.py`，leetcode c++模板
 * `leetjava_tpl.py`，leetcode java模板
 
 ``` bash
 tplmake.py -h
-tplmake.py -t leetcode -h
+tplmake.py -t leetcpp -h
 tplmake.py -t cmakelists -h
 ```
