@@ -46,10 +46,10 @@ public:
     }}
 
 private:
-        static Solution _solution;
+    static Solution solution_;
 }};
 
-Solution TestSolution::_solution;
+Solution TestSolution::solution_;
 
 
 int main() {{
