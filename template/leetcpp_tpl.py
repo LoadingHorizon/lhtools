@@ -14,15 +14,10 @@ cmakelists_tpl = """CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
 PROJECT({project})
 
 SET(CMAKE_VERBOSE_MAKEFILE OFF)
-SET(EXECUTABLE_OUTPUT_PATH ${{PROJECT_BINARY_DIR}}/bin)
+SET(EXECUTABLE_OUTPUT_PATH ${{{project}_BINARY_DIR}}/bin)
 SET(CMAKE_CXX_FLAGS "-g -pipe -W -Wall -fPIC")
 
-INCLUDE_DIRECTORIES(
-    "."
-)
-
-LINK_DIRECTORIES(
-)
+INCLUDE_DIRECTORIES(".")
 
 IF (class STREQUAL hl)
     ADD_DEFINITIONS(-DHL=1)
@@ -37,7 +32,8 @@ ADD_EXECUTABLE({filename} ${{SRC_LIST}})
 """
 
 
-main_tpl = """#include "{filename}.h"
+main_tpl = """#include <cassert>
+#include "{filename}.h"
 
 class TestSolution {{
 public:
@@ -50,7 +46,6 @@ private:
 }};
 
 Solution TestSolution::solution_;
-
 
 int main() {{
     TestSolution::test();

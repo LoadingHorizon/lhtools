@@ -16,11 +16,10 @@ PROJECT({project})
 SET(CMAKE_VERBOSE_MAKEFILE OFF)
 SET(EXECUTABLE_OUTPUT_PATH ${{PROJECT_BINARY_DIR}}/bin)
 SET(CMAKE_CXX_FLAGS "{cxx_flags}")
+SET(WORK_ROOT "{lib_base_path}")
 
 AUX_SOURCE_DIRECTORY(src SOURCES)
-SET(SRC_LIST
-    ${{SOURCES}}
-)
+SET(SRC_LIST ${{SOURCES}})
 
 INCLUDE_DIRECTORIES(
     "./include"
@@ -53,11 +52,10 @@ PROJECT({project})
 SET(CMAKE_VERBOSE_MAKEFILE OFF)
 SET(LIBRARY_OUTPUT_PATH ${{{project}_BINARY_DIR}}/lib)
 SET(CMAKE_CXX_FLAGS "{cxx_flags}")
+SET(WORK_ROOT "{lib_base_path}")
 
 AUX_SOURCE_DIRECTORY(src SOURCES)
-SET(SRC_LIST
-    ${{SOURCES}}
-)
+SET(SRC_LIST ${{SOURCES}})
 
 INCLUDE_DIRECTORIES(
     "./include"
@@ -79,15 +77,13 @@ cm_test_tpl = """CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
 PROJECT({project})
 
 SET(CMAKE_VERBOSE_MAKEFILE OFF)
-SET(EXECUTABLE_OUTPUT_PATH ${{PROJECT_BINARY_DIR}}/bin)
+SET(EXECUTABLE_OUTPUT_PATH ${{{project}_BINARY_DIR}}/bin)
 SET(CMAKE_CXX_FLAGS "{cxx_flags}")
+SET(WORK_ROOT "{lib_base_path}")
 
 AUX_SOURCE_DIRECTORY(../src SOURCES)
 AUX_SOURCE_DIRECTORY(. TEST_SOURCES)
-SET(SRC_LIST
-    ${{SOURCES}}
-    ${{TEST_SOURCES}}
-)
+SET(SRC_LIST ${{SOURCES}} ${{TEST_SOURCES}})
 
 INCLUDE_DIRECTORIES(
     "../include"
@@ -181,8 +177,8 @@ def params(options):
     for lib in libs:
         if lib == '':
             break
-        __params['include_dirs'] += '    "${{{0}_SOURCE_DIR}}/{1}/{2}/include"\n'.format(__params['project'], __params['lib_base_path'], libs_map[lib])
-        __params['link_dirs'] += '    "${{{0}_SOURCE_DIR}}/{1}/{2}/lib"\n'.format(__params['project'], __params['lib_base_path'], libs_map[lib])
+        __params['include_dirs'] += '    "${{{0}_SOURCE_DIR}}/${{WORK_ROOT}}/{1}/include"\n'.format(__params['project'], libs_map[lib])
+        __params['link_dirs'] += '    "${{{0}_SOURCE_DIR}}/${{WORK_ROOT}}/{1}/lib"\n'.format(__params['project'], libs_map[lib])
     __params['include_dirs'] = __params['include_dirs'][1:-1]
     __params['link_dirs'] = __params['link_dirs'][1:-1]
 
