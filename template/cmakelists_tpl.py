@@ -51,7 +51,7 @@ cm_lib_tpl = """CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
 PROJECT({project})
 
 SET(CMAKE_VERBOSE_MAKEFILE OFF)
-SET(EXECUTABLE_OUTPUT_PATH ${{PROJECT_BINARY_DIR}}/bin)
+SET(LIBRARY_OUTPUT_PATH ${{{project}_BINARY_DIR}}/lib)
 SET(CMAKE_CXX_FLAGS "{cxx_flags}")
 
 AUX_SOURCE_DIRECTORY(src SOURCES)
@@ -119,13 +119,14 @@ ADD_CUSTOM_COMMAND(
 libs_map = {
     'boost': 'third/boost/boost-1.56.0',
     'gtest': 'google/gtest/gtest-1.6.0',
+    'lh_configure': 'loadinghorizion/configure/configure-1.0.0'
 }
 
 default_arguments = {
     'project': 'PROJCET',
     'executable': 'executable',
     'cxx_flags': '-g -pipe -W -Wall -fPIC',
-    'lib_base_path': '../../../../..',
+    'lib_base_path': '../../../..',
     'librarys': 'boost gtest',
     'type': 'exe',
 }
@@ -167,17 +168,21 @@ def params(options):
     __params['project'] = args.project
     __params['executable'] = args.executable
     __params['cxx_flags'] = args.cxx_flags
-    __params['lib_base_path'] = args.lib_base_path
     __params['include_dirs'] = '\n'
     __params['link_dirs'] = '\n'
+
+    if __tpl_type == 'test':
+        __params['lib_base_path'] = '../' + args.lib_base_path
+    else:
+        __params['lib_base_path'] = args.lib_base_path
 
     librarys = args.librarys.strip()
     libs = librarys.split()
     for lib in libs:
         if lib == '':
             break
-        __params['include_dirs'] += '    "{0}/{1}/include"\n'.format(args.lib_base_path, libs_map[lib])
-        __params['link_dirs'] += '    "{0}/{1}/lib"\n'.format(args.lib_base_path, libs_map[lib])
+        __params['include_dirs'] += '    "${{{0}_SOURCE_DIR}}/{1}/{2}/include"\n'.format(__params['project'], __params['lib_base_path'], libs_map[lib])
+        __params['link_dirs'] += '    "${{{0}_SOURCE_DIR}}/{1}/{2}/lib"\n'.format(__params['project'], __params['lib_base_path'], libs_map[lib])
     __params['include_dirs'] = __params['include_dirs'][1:-1]
     __params['link_dirs'] = __params['link_dirs'][1:-1]
 
