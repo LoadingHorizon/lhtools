@@ -8,6 +8,7 @@ Date: 2014-10-30
 """
 
 import argparse
+import re
 
 leetcode_java_tpl = """import java.lang.reflect.Method;
 
@@ -16,28 +17,28 @@ public class Test {{
     private static Class class_;
 
     private static void test_cases() throws Throwable {{
-        // test_case(new Object[]{{new int[]{{1, 2, 3, 4}}, 8}}, new int[]{{0, 0}});
+        // test_case(new Object[]{{/* arg1, arg2 */}}, /* expect */);
         // TODO add your case here
     }};
 
     private static void test_case(Object[] args, Object ret) throws Throwable {{
-        // int[] result = (int[]) method_.invoke(class_.newInstance(), args);
-        // int[] expect = (int[]) ret;
+        {return_type} result = ({return_type}) method_.invoke(class_.newInstance(), args);
+        {return_type} expect = ({return_type}) ret;
         try {{
-            // TODO add assertions
-            // assert result[0] == expect[0];
-            // assert result[1] == expect[1];
+            assert result.equals(expect);
         }} catch (AssertionError e) {{
+{params_args}
             System.out.println("test case failed: ");
-            // TODO print error infomation
+{println_args}
+            System.out.println("    expect: " + expect);
+            System.out.println("    result: " + result);
         }}
     }}
 
     @SuppressWarnings("unchecked")
     public static void test(Class c) throws Throwable {{
         class_ = c;
-        // TODO set method_
-        // method_ = c.getMethod("twoSum", new Class[]{{int[].class, int.class}});
+        method_ = c.getMethod("{function_name}", new Class[]{{{param_type_class}}});
         test_cases();
     }}
 
@@ -55,6 +56,7 @@ public class Test {{
 """
 
 default_arguments = {
+    'function': 'return_type function_name(param_type param)',
 }
 
 
@@ -69,12 +71,33 @@ command example:
 
 def parser():
     parser = argparse.ArgumentParser(usage=command_example)
+    parser.add_argument('-f', '--function', default=default_arguments['function'],
+            help='function');
     return parser
 
 
 def params(options):
     global __params
     args = parser().parse_args(options)
+    function = args.function
+    m = re.match(r'(\w+) (\w+)\((.*?)\)', function)
+    __params['return_type'] = m.groups()[0]
+    __params['function_name'] = m.groups()[1]
+    __params['params_args'] = ''
+    __params['println_args'] = ''
+    params = m.groups()[2].split(',')
+    param_type_class_vec = []
+    count = 0
+    for param in params:
+        ptype = param.split()[0]
+        pname = param.split()[1]
+        param_type_class_vec.append(ptype + '.class')
+        __params['params_args'] += '            {type} {name} = ({type}) args[{idx}];\n'.format(type=ptype, name=pname, idx=count)
+        __params['println_args'] += '            System.out.println("    {name}: " + args[{idx}]);\n'.format(name=pname, idx=count)
+        count += 1
+    __params['param_type_class'] = ', '.join(param_type_class_vec)
+    __params['println_args'] = __params['println_args'][0:-1]
+    __params['params_args'] = __params['params_args'][0:-1]
     return __params
 
 
