@@ -80,7 +80,7 @@ def params(options):
     global __params
     args = parser().parse_args(options)
     function = args.function
-    m = re.match(r'(\w+) (\w+)\((.*?)\)', function)
+    m = re.match(r'(.*?) (\w+)\((.*?)\)', function)
     __params['return_type'] = m.groups()[0]
     __params['function_name'] = m.groups()[1]
     __params['params_args'] = ''
